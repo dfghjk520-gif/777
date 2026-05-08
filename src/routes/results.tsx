@@ -9,8 +9,8 @@ import { Sparkles } from "lucide-react";
 export const Route = createFileRoute("/results")({
   head: () => ({
     meta: [
-      { title: "Results · Seven77" },
-      { name: "description", content: "Watch the live draw and check your ticket results." },
+      { title: "開獎結果 · Seven77" },
+      { name: "description", content: "觀看即時開獎並查看你的彩券結果。" },
     ],
   }),
   component: ResultsPage,
@@ -61,10 +61,10 @@ function ResultsPage() {
       <section className="mx-auto max-w-5xl px-4 sm:px-6 pt-10 pb-20">
         <div className="text-center">
           <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs uppercase tracking-[0.25em] text-muted-foreground">
-            <Sparkles className="h-3 w-3" /> Today&apos;s Draw
+            <Sparkles className="h-3 w-3" /> 今日開獎
           </div>
           <h1 className="mt-4 font-display text-4xl sm:text-5xl font-bold tracking-tight">
-            The <span className="text-gradient-neon">winning</span> numbers
+            <span className="text-gradient-neon">中獎</span>號碼
           </h1>
         </div>
 
@@ -93,20 +93,20 @@ function ResultsPage() {
               disabled={drawing}
               className="inline-flex h-10 items-center gap-2 rounded-full glass px-5 text-sm font-medium hover:bg-white/5 disabled:opacity-50"
             >
-              {drawing ? "Drawing…" : "Run another demo draw"}
+              {drawing ? "開獎中…" : "再來一次示範開獎"}
             </button>
           </div>
         </div>
 
         {/* TICKETS */}
         <div className="mt-12">
-          <h2 className="font-display text-2xl font-semibold">Your tickets</h2>
-          <p className="text-sm text-muted-foreground">Match more numbers, win bigger rewards.</p>
+          <h2 className="font-display text-2xl font-semibold">你的彩券</h2>
+          <p className="text-sm text-muted-foreground">命中越多號碼,獎勵越豐厚。</p>
 
           <div className="mt-6 grid gap-3">
             {tickets.length === 0 && (
               <div className="glass rounded-2xl p-8 text-center text-muted-foreground">
-                No tickets yet. <a href="/play" className="text-foreground underline underline-offset-4">Play a round</a>.
+                目前沒有彩券。<a href="/play" className="text-foreground underline underline-offset-4">前往選號</a>。
               </div>
             )}
             {tickets.map((t) => {
@@ -130,13 +130,13 @@ function ResultsPage() {
                   </div>
                   <div className="flex items-center gap-6 sm:gap-8 shrink-0">
                     <div className="text-center">
-                      <div className="text-xs uppercase tracking-widest text-muted-foreground">Matches</div>
+                      <div className="text-xs uppercase tracking-widest text-muted-foreground">命中</div>
                       <div className="font-mono text-xl font-bold text-gradient-neon">
                         {matches ?? "—"}
                       </div>
                     </div>
                     <div className="text-center">
-                      <div className="text-xs uppercase tracking-widest text-muted-foreground">Reward</div>
+                      <div className="text-xs uppercase tracking-widest text-muted-foreground">獎勵</div>
                       <div className="font-mono text-xl font-bold text-gradient-gold">
                         {t.reward != null ? `+${t.reward.toLocaleString()}` : "—"}
                       </div>

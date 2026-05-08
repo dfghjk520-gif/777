@@ -5,8 +5,8 @@ import { Crown, Flame, Target } from "lucide-react";
 export const Route = createFileRoute("/leaderboard")({
   head: () => ({
     meta: [
-      { title: "Leaderboard · Seven77" },
-      { name: "description", content: "Top winners, hottest streaks, and most accurate players." },
+      { title: "排行榜 · Seven77" },
+      { name: "description", content: "頂尖贏家、最熱連勝與最準玩家。" },
     ],
   }),
   component: LeaderboardPage,
@@ -41,10 +41,10 @@ function LeaderboardPage() {
       <section className="mx-auto max-w-6xl px-4 sm:px-6 pt-10 pb-20">
         <div className="text-center">
           <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs uppercase tracking-[0.25em] text-muted-foreground">
-            Hall of fame
+            名人堂
           </div>
           <h1 className="mt-4 font-display text-4xl sm:text-5xl font-bold tracking-tight">
-            <span className="text-gradient-gold">Top</span> players
+            <span className="text-gradient-gold">頂尖</span>玩家
           </h1>
         </div>
 
@@ -52,7 +52,7 @@ function LeaderboardPage() {
           <div className="lg:col-span-2 glass-strong rounded-3xl overflow-hidden">
             <div className="px-6 py-5 border-b border-white/5 flex items-center gap-2">
               <Crown className="h-4 w-4 text-[oklch(0.85_0.16_88)]" />
-              <h2 className="font-display font-semibold">Top winners</h2>
+              <h2 className="font-display font-semibold">最高獲獎</h2>
             </div>
             <div className="divide-y divide-white/5">
               {winners.map((w) => (
@@ -81,7 +81,7 @@ function LeaderboardPage() {
             <div className="glass rounded-2xl p-5">
               <div className="flex items-center gap-2 mb-4">
                 <Flame className="h-4 w-4 text-[oklch(0.78_0.2_45)]" />
-                <h3 className="font-display font-semibold">Hottest streaks</h3>
+                <h3 className="font-display font-semibold">最熱連勝</h3>
               </div>
               <ul className="space-y-3">
                 {streaks.map((s) => (
@@ -96,7 +96,7 @@ function LeaderboardPage() {
             <div className="glass rounded-2xl p-5">
               <div className="flex items-center gap-2 mb-4">
                 <Target className="h-4 w-4 text-[oklch(0.72_0.2_240)]" />
-                <h3 className="font-display font-semibold">Most accurate</h3>
+                <h3 className="font-display font-semibold">命中率最高</h3>
               </div>
               <ul className="space-y-3">
                 {accurate.map((a) => (
