@@ -10,8 +10,8 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/play")({
   head: () => ({
     meta: [
-      { title: "Play · Seven77" },
-      { name: "description", content: "Pick 7 numbers from 77 balls and submit your ticket." },
+      { title: "選號 · Seven77" },
+      { name: "description", content: "從 77 顆球挑選 7 個號碼並提交彩券。" },
     ],
   }),
   component: PlayPage,
@@ -42,11 +42,11 @@ function PlayPage() {
 
   const submit = () => {
     if (selected.length !== PICK_COUNT) {
-      toast.error(`Pick exactly ${PICK_COUNT} numbers`);
+      toast.error(`請挑選 ${PICK_COUNT} 個號碼`);
       return;
     }
     if (balance < TICKET_COST) {
-      toast.error("Not enough demo points");
+      toast.error("示範點數不足");
       return;
     }
     setBalance(balance - TICKET_COST);
@@ -56,7 +56,7 @@ function PlayPage() {
       createdAt: Date.now(),
       drawAt: getNextDrawDate().getTime(),
     });
-    toast.success("Ticket submitted!");
+    toast.success("彩券已送出!");
     navigate({ to: "/results" });
   };
 
@@ -65,12 +65,12 @@ function PlayPage() {
       <section className="mx-auto max-w-6xl px-4 sm:px-6 pt-10 pb-32">
         <div className="text-center">
           <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs uppercase tracking-[0.25em] text-muted-foreground">
-            Lottery · 77 → 7
+            樂透 · 77 → 7
           </div>
           <h1 className="mt-4 font-display text-4xl sm:text-5xl font-bold tracking-tight">
-            Pick your <span className="text-gradient-gold">7</span> lucky numbers
+            挑選你的 <span className="text-gradient-gold">7</span> 個幸運號碼
           </h1>
-          <p className="mt-2 text-muted-foreground">Tap balls to select. Selected balls glow gold.</p>
+          <p className="mt-2 text-muted-foreground">點選號碼球進行挑選,被選中的球會發出金色光芒。</p>
         </div>
 
         {/* SELECTION SUMMARY */}
@@ -78,7 +78,7 @@ function PlayPage() {
           <div className="flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
             <div className="flex flex-wrap items-center gap-2 min-h-[48px]">
               {sortedSelected.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No numbers picked yet</p>
+                <p className="text-sm text-muted-foreground">尚未挑選號碼</p>
               ) : (
                 sortedSelected.map((n) => (
                   <LotteryBall key={n} number={n} selected size="sm" onClick={() => toggle(n)} animateIn />
@@ -97,21 +97,21 @@ function PlayPage() {
                 onClick={quickPick}
                 className="inline-flex h-10 items-center gap-2 rounded-full glass px-4 text-sm font-medium hover:bg-white/5"
               >
-                <Shuffle className="h-4 w-4" /> Quick pick
+                <Shuffle className="h-4 w-4" /> 隨機選號
               </button>
               <button
                 onClick={() => setSelected([])}
                 className="inline-flex h-10 items-center gap-2 rounded-full glass px-4 text-sm font-medium hover:bg-white/5"
                 disabled={selected.length === 0}
               >
-                <Trash2 className="h-4 w-4" /> Clear
+                <Trash2 className="h-4 w-4" /> 清除
               </button>
             </div>
           </div>
 
           <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
-            <span>Cost: <span className="font-mono text-foreground">{TICKET_COST}</span> pts</span>
-            <span>Balance: <span className="font-mono text-foreground">{balance.toLocaleString()}</span> pts</span>
+            <span>票價:<span className="font-mono text-foreground">{TICKET_COST}</span> 點</span>
+            <span>餘額:<span className="font-mono text-foreground">{balance.toLocaleString()}</span> 點</span>
           </div>
         </div>
 
@@ -144,16 +144,16 @@ function PlayPage() {
         <div className="mx-auto max-w-2xl glass-strong rounded-2xl p-3 flex items-center justify-between gap-3 shadow-elevated">
           <div className="text-sm">
             <div className="font-display font-semibold">
-              {selected.length}/{PICK_COUNT} selected
+              已選 {selected.length}/{PICK_COUNT}
             </div>
-            <div className="text-xs text-muted-foreground">{remaining} remaining</div>
+            <div className="text-xs text-muted-foreground">還需挑選 {remaining} 個</div>
           </div>
           <button
             onClick={submit}
             disabled={selected.length !== PICK_COUNT}
             className="inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-[oklch(0.95_0.13_95)] to-[oklch(0.78_0.18_70)] px-5 font-semibold text-primary-foreground glow-gold disabled:opacity-40 disabled:cursor-not-allowed disabled:glow-none transition-transform hover:scale-105 disabled:hover:scale-100"
           >
-            <Ticket className="h-4 w-4" /> Submit Ticket
+            <Ticket className="h-4 w-4" /> 送出彩券
           </button>
         </div>
       </div>
