@@ -7,8 +7,8 @@ import { Coins, History, Trophy, User2 } from "lucide-react";
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
-      { title: "Dashboard · Seven77" },
-      { name: "description", content: "Your tickets, balance, and lottery stats." },
+      { title: "我的儀表板 · Seven77" },
+      { name: "description", content: "你的彩券、餘額和樂透統計。" },
     ],
   }),
   component: DashboardPage,
@@ -22,10 +22,10 @@ function DashboardPage() {
   const bestMatch = tickets.reduce((m, t) => Math.max(m, t.matches ?? 0), 0);
 
   const stats = [
-    { icon: Coins, label: "Balance", value: balance.toLocaleString(), accent: "gold" as const },
-    { icon: History, label: "Tickets played", value: totalTickets.toString() },
-    { icon: Trophy, label: "Total won", value: totalWon.toLocaleString(), accent: "gold" as const },
-    { icon: User2, label: "Best match", value: `${bestMatch}/7` },
+    { icon: Coins, label: "餘額", value: balance.toLocaleString(), accent: "gold" as const },
+    { icon: History, label: "已玩彩券", value: totalTickets.toString() },
+    { icon: Trophy, label: "總獲獎", value: totalWon.toLocaleString(), accent: "gold" as const },
+    { icon: User2, label: "最佳命中", value: `${bestMatch}/7` },
   ];
 
   return (
@@ -37,15 +37,15 @@ function DashboardPage() {
               {username.slice(0, 1).toUpperCase()}
             </div>
             <div>
-              <h1 className="font-display text-2xl sm:text-3xl font-bold">Hello, {username}</h1>
-              <p className="text-sm text-muted-foreground">Your live demo dashboard</p>
+              <h1 className="font-display text-2xl sm:text-3xl font-bold">你好,{username}</h1>
+              <p className="text-sm text-muted-foreground">即時示範儀表板</p>
             </div>
           </div>
           <button
             onClick={reset}
             className="inline-flex h-9 items-center rounded-full glass px-4 text-sm hover:bg-white/5"
           >
-            Reset demo
+            重置示範
           </button>
         </div>
 
@@ -65,14 +65,14 @@ function DashboardPage() {
 
         <div className="mt-10">
           <div className="flex items-center justify-between">
-            <h2 className="font-display text-xl font-semibold">Ticket history</h2>
-            <Link to="/play" className="text-sm text-muted-foreground hover:text-foreground">+ New ticket</Link>
+            <h2 className="font-display text-xl font-semibold">彩券記錄</h2>
+            <Link to="/play" className="text-sm text-muted-foreground hover:text-foreground">+ 新增彩券</Link>
           </div>
 
           <div className="mt-4 grid gap-3">
             {tickets.length === 0 && (
               <div className="glass rounded-2xl p-8 text-center text-muted-foreground">
-                No tickets yet. <Link to="/play" className="text-foreground underline underline-offset-4">Play your first round</Link>.
+                還沒有彩券。<Link to="/play" className="text-foreground underline underline-offset-4">前往玩第一場</Link>。
               </div>
             )}
             {tickets.map((t) => (
@@ -89,13 +89,13 @@ function DashboardPage() {
                 </div>
                 <div className="flex items-center gap-6 shrink-0">
                   <div className="text-center">
-                    <div className="text-xs uppercase tracking-widest text-muted-foreground">Match</div>
+                    <div className="text-xs uppercase tracking-widest text-muted-foreground">命中</div>
                     <div className="font-mono text-lg font-bold text-gradient-neon">
                       {t.matches ?? "—"}
                     </div>
                   </div>
                   <div className="text-center">
-                    <div className="text-xs uppercase tracking-widest text-muted-foreground">Reward</div>
+                    <div className="text-xs uppercase tracking-widest text-muted-foreground">獎勵</div>
                     <div className="font-mono text-lg font-bold text-gradient-gold">
                       {t.reward ? `+${t.reward.toLocaleString()}` : "—"}
                     </div>
