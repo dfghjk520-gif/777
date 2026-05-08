@@ -1,31 +1,73 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PageShell } from "@/components/PageShell";
-import { useDemoState } from "@/lib/demo-store";
-import { Mail, Lock, Sparkles } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
+import { supabase } from "@/integrations/supabase/client";
+import { Mail, Lock, Sparkles, User as UserIcon, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
       { title: "登入 · Seven77" },
-      { name: "description", content: "登入以參加 Seven77 每日樂透。" },
+      { name: "description", content: "登入或註冊以參加 Seven77 每日樂透。" },
     ],
   }),
   component: LoginPage,
 });
 
-function LoginPage() {
-  const { setUsername } = useDemoState();
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+type Mode = "signin" | "signup";
 
-  const submit = (e: React.FormEvent) => {
+function LoginPage() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [mode, setMode] = useState<Mode>("signin");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (user) navigate({ to: "/play" });
+  }, [user, navigate]);
+
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const name = email.split("@")[0] || "玩家";
-    setUsername(name);
-    toast.success(`歡迎回來,${name}`);
-    navigate({ to: "/play" });
+    if (submitting) return;
+    setSubmitting(true);
+    try {
+      if (mode === "signup") {
+        if (username.trim().length < 2) {
+          toast.error("請輸入至少 2 個字元的暱稱");
+          return;
+        }
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/play`,
+            data: { username: username.trim() },
+          },
+        });
+        if (error) {
+          if (error.message.includes("already")) toast.error("此電子郵件已註冊");
+          else toast.error(error.message);
+          return;
+        }
+        toast.success("註冊成功!歡迎加入 Seven77");
+        navigate({ to: "/play" });
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) {
+          toast.error("帳號或密碼錯誤");
+          return;
+        }
+        toast.success("歡迎回來!");
+        navigate({ to: "/play" });
+      }
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -35,25 +77,49 @@ function LoginPage() {
           <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[oklch(0.95_0.13_95)] to-[oklch(0.7_0.2_240)] glow-gold">
             <Sparkles className="h-5 w-5 text-background" />
           </div>
-          <h1 className="mt-5 font-display text-3xl font-bold tracking-tight">歡迎回來</h1>
-          <p className="mt-2 text-sm text-muted-foreground">登入以參加今日開獎。</p>
+          <h1 className="mt-5 font-display text-3xl font-bold tracking-tight">
+            {mode === "signin" ? "歡迎回來" : "建立帳號"}
+          </h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {mode === "signin" ? "登入以參加今日開獎。" : "註冊即可獲得 5,000 示範點數。"}
+          </p>
         </div>
 
-        <form onSubmit={submit} className="mt-8 glass-strong rounded-3xl p-6 space-y-4">
+        <div className="mt-6 grid grid-cols-2 gap-1 glass rounded-full p-1">
           <button
             type="button"
-            onClick={() => { setUsername("玩家"); navigate({ to: "/play" }); }}
-            className="w-full h-11 inline-flex items-center justify-center gap-3 rounded-xl bg-white text-zinc-900 font-medium hover:bg-zinc-100 transition-colors"
+            onClick={() => setMode("signin")}
+            className={`h-9 rounded-full text-sm font-medium transition-colors ${mode === "signin" ? "bg-white/10 text-foreground" : "text-muted-foreground hover:text-foreground"}`}
           >
-            <svg className="h-4 w-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.83z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.83C6.71 7.31 9.14 5.38 12 5.38z"/></svg>
-            使用 Google 繼續
+            登入
           </button>
+          <button
+            type="button"
+            onClick={() => setMode("signup")}
+            className={`h-9 rounded-full text-sm font-medium transition-colors ${mode === "signup" ? "bg-white/10 text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+          >
+            註冊
+          </button>
+        </div>
 
-          <div className="flex items-center gap-3 text-xs text-muted-foreground">
-            <div className="h-px flex-1 bg-white/10" />
-            或
-            <div className="h-px flex-1 bg-white/10" />
-          </div>
+        <form onSubmit={submit} className="mt-4 glass-strong rounded-3xl p-6 space-y-4">
+          {mode === "signup" && (
+            <label className="block">
+              <span className="text-xs uppercase tracking-widest text-muted-foreground">暱稱</span>
+              <div className="mt-1.5 relative">
+                <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <input
+                  type="text"
+                  required
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="你的玩家名稱"
+                  maxLength={32}
+                  className="w-full h-11 rounded-xl bg-white/5 border border-white/10 pl-10 pr-3 text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-[oklch(0.7_0.18_240)] focus:border-transparent transition"
+                />
+              </div>
+            </label>
+          )}
 
           <label className="block">
             <span className="text-xs uppercase tracking-widest text-muted-foreground">電子郵件</span>
@@ -77,7 +143,10 @@ function LoginPage() {
               <input
                 type="password"
                 required
-                placeholder="••••••••"
+                minLength={6}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="至少 6 個字元"
                 className="w-full h-11 rounded-xl bg-white/5 border border-white/10 pl-10 pr-3 text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-[oklch(0.7_0.18_240)] focus:border-transparent transition"
               />
             </div>
@@ -85,18 +154,24 @@ function LoginPage() {
 
           <button
             type="submit"
-            className="w-full h-11 inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-[oklch(0.95_0.13_95)] to-[oklch(0.78_0.18_70)] font-semibold text-primary-foreground glow-gold hover:scale-[1.02] transition-transform"
+            disabled={submitting}
+            className="w-full h-11 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[oklch(0.95_0.13_95)] to-[oklch(0.78_0.18_70)] font-semibold text-primary-foreground glow-gold hover:scale-[1.02] transition-transform disabled:opacity-60 disabled:hover:scale-100"
           >
-            登入並開玩
+            {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
+            {mode === "signin" ? "登入並開玩" : "建立帳號並開玩"}
           </button>
 
           <p className="text-center text-xs text-muted-foreground">
-            還沒有帳號?<Link to="/login" className="text-foreground underline underline-offset-4">建立帳號</Link>
+            {mode === "signin" ? (
+              <>還沒有帳號?<button type="button" onClick={() => setMode("signup")} className="text-foreground underline underline-offset-4">立即註冊</button></>
+            ) : (
+              <>已有帳號?<button type="button" onClick={() => setMode("signin")} className="text-foreground underline underline-offset-4">前往登入</button></>
+            )}
           </p>
         </form>
 
         <p className="mt-6 text-center text-xs text-muted-foreground">
-          示範模式 · 無真實驗證。完整登入功能將透過 Lovable Cloud 提供。
+          回到 <Link to="/" className="text-foreground underline underline-offset-4">首頁</Link>
         </p>
       </section>
     </PageShell>
