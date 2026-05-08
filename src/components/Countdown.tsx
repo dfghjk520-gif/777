@@ -34,11 +34,11 @@ export function Countdown() {
 
   return (
     <div className="flex items-end justify-center gap-2 sm:gap-4">
-      <Cell value={format(h)} label="Hours" />
+      <Cell value={format(h)} label="時" />
       <div className="pb-8 text-3xl sm:text-5xl font-bold text-muted-foreground/50">:</div>
-      <Cell value={format(m)} label="Minutes" />
+      <Cell value={format(m)} label="分" />
       <div className="pb-8 text-3xl sm:text-5xl font-bold text-muted-foreground/50">:</div>
-      <Cell value={format(s)} label="Seconds" />
+      <Cell value={format(s)} label="秒" />
     </div>
   );
 }

@@ -2,11 +2,11 @@ import { Link } from "@tanstack/react-router";
 import { Sparkles } from "lucide-react";
 
 const nav = [
-  { to: "/", label: "Home" },
-  { to: "/play", label: "Play" },
-  { to: "/results", label: "Results" },
-  { to: "/leaderboard", label: "Leaderboard" },
-  { to: "/dashboard", label: "Dashboard" },
+  { to: "/", label: "首頁" },
+  { to: "/play", label: "選號" },
+  { to: "/results", label: "開獎" },
+  { to: "/leaderboard", label: "排行榜" },
+  { to: "/dashboard", label: "我的" },
 ] as const;
 
 export function SiteHeader() {
@@ -42,13 +42,13 @@ export function SiteHeader() {
             to="/login"
             className="hidden sm:inline-flex h-9 items-center rounded-full px-4 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
-            Sign in
+            登入
           </Link>
           <Link
             to="/play"
             className="inline-flex h-9 items-center rounded-full bg-gradient-to-r from-[oklch(0.95_0.13_95)] to-[oklch(0.78_0.18_70)] px-4 text-sm font-semibold text-primary-foreground glow-gold hover:scale-105 transition-transform"
           >
-            Play Now
+            立即開玩
           </Link>
         </div>
       </div>
