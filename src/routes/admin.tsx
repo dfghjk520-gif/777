@@ -1,4 +1,4 @@
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { PageShell } from "@/components/PageShell";
@@ -10,10 +10,6 @@ export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [{ title: "管理員後台 · Seven77" }],
   }),
-  beforeLoad: async () => {
-    const { data, error } = await supabase.auth.getUser();
-    if (error || !data.user) throw redirect({ to: "/login" });
-  },
   component: AdminPage,
 });
 
@@ -21,7 +17,12 @@ function AdminPage() {
   const fetchUsers = useServerFn(getAdminUsers);
   const { data, isLoading, error } = useQuery({
     queryKey: ["admin-users"],
-    queryFn: () => fetchUsers(),
+    queryFn: async () => {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const accessToken = sessionData.session?.access_token;
+      if (!accessToken) throw new Error("請重新登入管理員帳號");
+      return fetchUsers({ data: { accessToken } });
+    },
     retry: false,
   });
 
