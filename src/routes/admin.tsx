@@ -21,7 +21,12 @@ function AdminPage() {
   const fetchUsers = useServerFn(getAdminUsers);
   const { data, isLoading, error } = useQuery({
     queryKey: ["admin-users"],
-    queryFn: () => fetchUsers(),
+    queryFn: async () => {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const accessToken = sessionData.session?.access_token;
+      if (!accessToken) throw new Error("請重新登入管理員帳號");
+      return fetchUsers({ data: { accessToken } });
+    },
     retry: false,
   });
 
