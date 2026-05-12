@@ -46,14 +46,14 @@ export function SiteHeader() {
               {isAdmin && (
                 <Link
                   to="/admin"
-                  className="hidden sm:inline-flex h-9 items-center gap-1.5 rounded-full glass px-3 text-xs font-medium text-[oklch(0.85_0.15_240)] hover:bg-white/5 transition-colors"
+                  className="inline-flex h-9 items-center gap-1.5 rounded-full glass px-3 text-xs font-medium text-[oklch(0.85_0.15_240)] hover:bg-white/5 transition-colors"
                 >
                   <ShieldCheck className="h-3.5 w-3.5" /> 後台
                 </Link>
               )}
               <Link
                 to="/dashboard"
-                className="hidden sm:inline-flex items-center gap-2 h-9 rounded-full glass px-3 text-sm font-medium hover:bg-white/5 transition-colors"
+                className="inline-flex items-center gap-2 h-9 rounded-full glass px-3 text-sm font-medium hover:bg-white/5 transition-colors"
               >
                 <span className="h-6 w-6 rounded-full bg-gradient-to-br from-[oklch(0.95_0.13_95)] to-[oklch(0.7_0.2_240)] flex items-center justify-center text-xs font-bold text-background">
                   {(profile?.username ?? "U").slice(0, 1).toUpperCase()}
