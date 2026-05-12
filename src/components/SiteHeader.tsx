@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { LogOut, Sparkles } from "lucide-react";
+import { LogOut, ShieldCheck, Sparkles } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
 
@@ -12,7 +12,7 @@ const nav = [
 ] as const;
 
 export function SiteHeader() {
-  const { user, profile, signOut } = useAuth();
+  const { user, profile, isAdmin, signOut } = useAuth();
   return (
     <header className="sticky top-0 z-40 w-full">
       <div className="absolute inset-x-0 top-0 h-full bg-gradient-to-b from-background/80 to-transparent backdrop-blur-md border-b border-white/5" />
@@ -43,6 +43,14 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           {user ? (
             <>
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  className="hidden sm:inline-flex h-9 items-center gap-1.5 rounded-full glass px-3 text-xs font-medium text-[oklch(0.85_0.15_240)] hover:bg-white/5 transition-colors"
+                >
+                  <ShieldCheck className="h-3.5 w-3.5" /> 後台
+                </Link>
+              )}
               <Link
                 to="/dashboard"
                 className="hidden sm:inline-flex items-center gap-2 h-9 rounded-full glass px-3 text-sm font-medium hover:bg-white/5 transition-colors"
