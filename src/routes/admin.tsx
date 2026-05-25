@@ -1,30 +1,34 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { PageShell } from "@/components/PageShell";
 import { supabase } from "@/integrations/supabase/client";
 import { getAdminUsers } from "@/lib/admin.functions";
 import { Loader2, ShieldCheck } from "lucide-react";
+import { useT } from "@/i18n";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
-    meta: [{ title: "管理员后台 · Seven77" }],
+    meta: [{ title: "Admin · Seven77" }],
   }),
   component: AdminPage,
 });
 
 function AdminPage() {
+  const { t, lang } = useT();
   const fetchUsers = useServerFn(getAdminUsers);
   const { data, isLoading, error } = useQuery({
     queryKey: ["admin-users"],
     queryFn: async () => {
       const { data: sessionData } = await supabase.auth.getSession();
       const accessToken = sessionData.session?.access_token;
-      if (!accessToken) throw new Error("请重新登入管理员帐号");
+      if (!accessToken) throw new Error(t("admin.relogin"));
       return fetchUsers({ data: { accessToken } });
     },
     retry: false,
   });
+
+  const localeTag = lang === "zh-TW" ? "zh-Hant" : lang === "zh-CN" ? "zh-Hans" : "en";
 
   return (
     <PageShell>
@@ -34,14 +38,14 @@ function AdminPage() {
             <ShieldCheck className="h-5 w-5 text-background" />
           </div>
           <div>
-            <h1 className="font-display text-3xl font-bold tracking-tight">管理员后台</h1>
-            <p className="text-sm text-muted-foreground mt-1">查看所有用户帐号、暱称与点数余额</p>
+            <h1 className="font-display text-3xl font-bold tracking-tight">{t("admin.title")}</h1>
+            <p className="text-sm text-muted-foreground mt-1">{t("admin.sub")}</p>
           </div>
         </div>
 
         {isLoading && (
           <div className="glass-strong rounded-3xl p-12 flex items-center justify-center gap-3 text-muted-foreground">
-            <Loader2 className="h-5 w-5 animate-spin" /> 载入中…
+            <Loader2 className="h-5 w-5 animate-spin" /> {t("admin.loading")}
           </div>
         )}
 
@@ -51,11 +55,8 @@ function AdminPage() {
               {String((error as Error).message ?? error)}
             </p>
             <p className="text-xs text-muted-foreground mt-2">
-              你需要管理员权限才能查看此页面。请联系系统管理员。
+              {t("admin.needAdmin")}
             </p>
-            <Link to="/" className="inline-block mt-4 text-sm underline underline-offset-4">
-              返回首页
-            </Link>
           </div>
         )}
 
@@ -63,22 +64,22 @@ function AdminPage() {
           <div className="glass-strong rounded-3xl overflow-hidden">
             <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
               <span className="text-sm text-muted-foreground">
-                共 <span className="text-foreground font-semibold">{data.users.length}</span> 位用户
+                {t("admin.total")} <span className="text-foreground font-semibold">{data.users.length}</span> {t("admin.users")}
               </span>
               <span className="text-xs text-muted-foreground font-mono">
-                总余额 {data.users.reduce((s, u) => s + u.balance, 0).toLocaleString()} pts
+                {t("admin.totalBalance")} {data.users.reduce((s, u) => s + u.balance, 0).toLocaleString()} pts
               </span>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead className="text-xs uppercase tracking-widest text-muted-foreground">
                   <tr className="border-b border-white/5">
-                    <th className="text-left px-6 py-3 font-medium">暱称</th>
-                    <th className="text-left px-6 py-3 font-medium">电子邮件</th>
-                    <th className="text-right px-6 py-3 font-medium">点数余额</th>
-                    <th className="text-left px-6 py-3 font-medium">角色</th>
-                    <th className="text-left px-6 py-3 font-medium">注册时间</th>
-                    <th className="text-left px-6 py-3 font-medium">最后登入</th>
+                    <th className="text-left px-6 py-3 font-medium">{t("admin.th.name")}</th>
+                    <th className="text-left px-6 py-3 font-medium">{t("admin.th.email")}</th>
+                    <th className="text-right px-6 py-3 font-medium">{t("admin.th.balance")}</th>
+                    <th className="text-left px-6 py-3 font-medium">{t("admin.th.role")}</th>
+                    <th className="text-left px-6 py-3 font-medium">{t("admin.th.created")}</th>
+                    <th className="text-left px-6 py-3 font-medium">{t("admin.th.last")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -113,10 +114,10 @@ function AdminPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4 text-xs text-muted-foreground">
-                        {new Date(u.created_at).toLocaleString("zh-Hant")}
+                        {new Date(u.created_at).toLocaleString(localeTag)}
                       </td>
                       <td className="px-6 py-4 text-xs text-muted-foreground">
-                        {u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleString("zh-Hant") : "—"}
+                        {u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleString(localeTag) : "—"}
                       </td>
                     </tr>
                   ))}
