@@ -1,12 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageShell } from "@/components/PageShell";
 import { Crown, Flame, Target } from "lucide-react";
+import { useT } from "@/i18n";
 
 export const Route = createFileRoute("/leaderboard")({
   head: () => ({
     meta: [
-      { title: "排行榜 · Seven77" },
-      { name: "description", content: "顶尖赢家、最热连胜与最准玩家。" },
+      { title: "Leaderboard · Seven77" },
+      { name: "description", content: "Top winners, hottest streaks and most accurate players." },
     ],
   }),
   component: LeaderboardPage,
@@ -36,15 +37,16 @@ const accurate = [
 ];
 
 function LeaderboardPage() {
+  const { t } = useT();
   return (
     <PageShell>
       <section className="mx-auto max-w-6xl px-4 sm:px-6 pt-10 pb-20">
         <div className="text-center">
           <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs uppercase tracking-[0.25em] text-muted-foreground">
-            名人堂
+            {t("lb.kicker")}
           </div>
           <h1 className="mt-4 font-display text-4xl sm:text-5xl font-bold tracking-tight">
-            <span className="text-gradient-gold">顶尖</span>玩家
+            <span className="text-gradient-gold">{t("lb.title1")}</span>{t("lb.title2")}
           </h1>
         </div>
 
@@ -52,7 +54,7 @@ function LeaderboardPage() {
           <div className="lg:col-span-2 glass-strong rounded-3xl overflow-hidden">
             <div className="px-6 py-5 border-b border-white/5 flex items-center gap-2">
               <Crown className="h-4 w-4 text-[oklch(0.85_0.16_88)]" />
-              <h2 className="font-display font-semibold">最高获奖</h2>
+              <h2 className="font-display font-semibold">{t("lb.winners")}</h2>
             </div>
             <div className="divide-y divide-white/5">
               {winners.map((w) => (
@@ -81,7 +83,7 @@ function LeaderboardPage() {
             <div className="glass rounded-2xl p-5">
               <div className="flex items-center gap-2 mb-4">
                 <Flame className="h-4 w-4 text-[oklch(0.78_0.2_45)]" />
-                <h3 className="font-display font-semibold">最热连胜</h3>
+                <h3 className="font-display font-semibold">{t("lb.streak")}</h3>
               </div>
               <ul className="space-y-3">
                 {streaks.map((s) => (
@@ -96,7 +98,7 @@ function LeaderboardPage() {
             <div className="glass rounded-2xl p-5">
               <div className="flex items-center gap-2 mb-4">
                 <Target className="h-4 w-4 text-[oklch(0.72_0.2_240)]" />
-                <h3 className="font-display font-semibold">命中率最高</h3>
+                <h3 className="font-display font-semibold">{t("lb.accuracy")}</h3>
               </div>
               <ul className="space-y-3">
                 {accurate.map((a) => (
