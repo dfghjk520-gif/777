@@ -6,18 +6,20 @@ import { useDemoState } from "@/lib/demo-store";
 import { PICK_COUNT, TICKET_COST, TOTAL_BALLS, getNextDrawDate } from "@/lib/lottery";
 import { Shuffle, Ticket, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { useT } from "@/i18n";
 
 export const Route = createFileRoute("/play")({
   head: () => ({
     meta: [
-      { title: "选号 · Seven77" },
-      { name: "description", content: "从 77 颗球挑选 7 个号码并提交彩券。" },
+      { title: "Pick · Seven77" },
+      { name: "description", content: "Pick 7 numbers from 77 and submit your ticket." },
     ],
   }),
   component: PlayPage,
 });
 
 function PlayPage() {
+  const { t } = useT();
   const { balance, setBalance, addTicket } = useDemoState();
   const [selected, setSelected] = useState<number[]>([]);
   const navigate = useNavigate();
@@ -42,11 +44,11 @@ function PlayPage() {
 
   const submit = () => {
     if (selected.length !== PICK_COUNT) {
-      toast.error(`请挑选 ${PICK_COUNT} 个号码`);
+      toast.error(t("play.errPick", { n: PICK_COUNT }));
       return;
     }
     if (balance < TICKET_COST) {
-      toast.error("示范点数不足");
+      toast.error(t("play.errBalance"));
       return;
     }
     setBalance(balance - TICKET_COST);
@@ -56,7 +58,7 @@ function PlayPage() {
       createdAt: Date.now(),
       drawAt: getNextDrawDate().getTime(),
     });
-    toast.success("彩券已送出!");
+    toast.success(t("play.success"));
     navigate({ to: "/results" });
   };
 
@@ -65,12 +67,12 @@ function PlayPage() {
       <section className="mx-auto max-w-6xl px-4 sm:px-6 pt-10 pb-32">
         <div className="text-center">
           <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs uppercase tracking-[0.25em] text-muted-foreground">
-            乐透 · 77 → 7
+            {t("play.kicker")}
           </div>
           <h1 className="mt-4 font-display text-4xl sm:text-5xl font-bold tracking-tight">
-            挑选你的 <span className="text-gradient-gold">7</span> 个幸运号码
+            {t("play.title1")} <span className="text-gradient-gold">7</span> {t("play.title2")}
           </h1>
-          <p className="mt-2 text-muted-foreground">点选号码球进行挑选,被选中的球会发出金色光芒。</p>
+          <p className="mt-2 text-muted-foreground">{t("play.desc")}</p>
         </div>
 
         {/* SELECTION SUMMARY */}
@@ -78,40 +80,37 @@ function PlayPage() {
           <div className="flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
             <div className="flex flex-wrap items-center gap-2 min-h-[48px]">
               {sortedSelected.length === 0 ? (
-                <p className="text-sm text-muted-foreground">尚未挑选号码</p>
+                <p className="text-sm text-muted-foreground">{t("play.none")}</p>
               ) : (
                 sortedSelected.map((n) => (
                   <LotteryBall key={n} number={n} selected size="sm" onClick={() => toggle(n)} animateIn />
                 ))
               )}
               {Array.from({ length: remaining }).map((_, i) => (
-                <div
-                  key={`empty-${i}`}
-                  className="w-10 h-10 rounded-full border-2 border-dashed border-white/10"
-                />
+                <div key={`empty-${i}`} className="h-10 w-10 rounded-full border-2 border-dashed border-white/10" />
               ))}
             </div>
 
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-2">
               <button
                 onClick={quickPick}
                 className="inline-flex h-10 items-center gap-2 rounded-full glass px-4 text-sm font-medium hover:bg-white/5"
               >
-                <Shuffle className="h-4 w-4" /> 随机选号
+                <Shuffle className="h-4 w-4" /> {t("play.quick")}
               </button>
               <button
                 onClick={() => setSelected([])}
                 className="inline-flex h-10 items-center gap-2 rounded-full glass px-4 text-sm font-medium hover:bg-white/5"
                 disabled={selected.length === 0}
               >
-                <Trash2 className="h-4 w-4" /> 清除
+                <Trash2 className="h-4 w-4" /> {t("play.clear")}
               </button>
             </div>
           </div>
 
           <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
-            <span>票价:<span className="font-mono text-foreground">{TICKET_COST}</span> 点</span>
-            <span>余额:<span className="font-mono text-foreground">{balance.toLocaleString()}</span> 点</span>
+            <span>{t("play.price")}<span className="font-mono text-foreground">{TICKET_COST}</span> {t("play.point")}</span>
+            <span>{t("play.balance")}<span className="font-mono text-foreground">{balance.toLocaleString()}</span> {t("play.point")}</span>
           </div>
         </div>
 
@@ -144,16 +143,16 @@ function PlayPage() {
         <div className="mx-auto max-w-2xl glass-strong rounded-2xl p-3 flex items-center justify-between gap-3 shadow-elevated">
           <div className="text-sm">
             <div className="font-display font-semibold">
-              已选 {selected.length}/{PICK_COUNT}
+              {t("play.selected")} {selected.length}/{PICK_COUNT}
             </div>
-            <div className="text-xs text-muted-foreground">还需挑选 {remaining} 个</div>
+            <div className="text-xs text-muted-foreground">{t("play.needMore", { n: remaining })}</div>
           </div>
           <button
             onClick={submit}
             disabled={selected.length !== PICK_COUNT}
             className="inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-[oklch(0.95_0.13_95)] to-[oklch(0.78_0.18_70)] px-5 font-semibold text-primary-foreground glow-gold disabled:opacity-40 disabled:cursor-not-allowed disabled:glow-none transition-transform hover:scale-105 disabled:hover:scale-100"
           >
-            <Ticket className="h-4 w-4" /> 送出彩券
+            <Ticket className="h-4 w-4" /> {t("play.submit")}
           </button>
         </div>
       </div>

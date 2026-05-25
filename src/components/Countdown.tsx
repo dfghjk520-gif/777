@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { getNextDrawDate } from "@/lib/lottery";
+import { useT } from "@/i18n";
 
 function format(n: number) { return n.toString().padStart(2, "0"); }
 
 export function Countdown() {
+  const { t } = useT();
   const [target, setTarget] = useState<Date>(() => getNextDrawDate());
   const [now, setNow] = useState(() => Date.now());
 
@@ -34,11 +36,11 @@ export function Countdown() {
 
   return (
     <div className="flex items-end justify-center gap-2 sm:gap-4">
-      <Cell value={format(h)} label="时" />
+      <Cell value={format(h)} label={t("cd.h")} />
       <div className="pb-8 text-3xl sm:text-5xl font-bold text-muted-foreground/50">:</div>
-      <Cell value={format(m)} label="分" />
+      <Cell value={format(m)} label={t("cd.m")} />
       <div className="pb-8 text-3xl sm:text-5xl font-bold text-muted-foreground/50">:</div>
-      <Cell value={format(s)} label="秒" />
+      <Cell value={format(s)} label={t("cd.s")} />
     </div>
   );
 }

@@ -11,22 +11,22 @@ import {
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/use-auth";
+import { I18nProvider, useT } from "@/i18n";
 
 function NotFoundComponent() {
+  const { t } = useT();
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">找不到页面</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          您要查看的页面不存在或已被移动。
-        </p>
+        <h2 className="mt-4 text-xl font-semibold text-foreground">{t("err.notFoundTitle")}</h2>
+        <p className="mt-2 text-sm text-muted-foreground">{t("err.notFoundDesc")}</p>
         <div className="mt-6">
           <Link
             to="/"
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            回到首页
+            {t("err.backHome")}
           </Link>
         </div>
       </div>
@@ -37,16 +37,15 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
+  const { t } = useT();
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          页面载入失败
+          {t("err.loadFailTitle")}
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          发生了一些问题,请尝试重新整理或回到首页。
-        </p>
+        <p className="mt-2 text-sm text-muted-foreground">{t("err.loadFailDesc")}</p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
@@ -55,13 +54,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             }}
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            重新尝试
+            {t("err.retry")}
           </button>
           <a
             href="/"
             className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
-            回到首页
+            {t("err.backHome")}
           </a>
         </div>
       </div>
@@ -118,10 +117,12 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <Outlet />
-        <Toaster theme="dark" position="top-center" />
-      </AuthProvider>
+      <I18nProvider>
+        <AuthProvider>
+          <Outlet />
+          <Toaster theme="dark" position="top-center" />
+        </AuthProvider>
+      </I18nProvider>
     </QueryClientProvider>
   );
 }

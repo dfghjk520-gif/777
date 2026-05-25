@@ -3,29 +3,31 @@ import { PageShell } from "@/components/PageShell";
 import { LotteryBall } from "@/components/LotteryBall";
 import { useDemoState } from "@/lib/demo-store";
 import { Coins, History, Trophy, User2 } from "lucide-react";
+import { useT } from "@/i18n";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
-      { title: "我的仪表板 · Seven77" },
-      { name: "description", content: "你的彩券、余额和乐透统计。" },
+      { title: "Dashboard · Seven77" },
+      { name: "description", content: "Your tickets, balance and lottery stats." },
     ],
   }),
   component: DashboardPage,
 });
 
 function DashboardPage() {
+  const { t } = useT();
   const { balance, tickets, username, reset } = useDemoState();
 
   const totalTickets = tickets.length;
-  const totalWon = tickets.reduce((sum, t) => sum + (t.reward ?? 0), 0);
-  const bestMatch = tickets.reduce((m, t) => Math.max(m, t.matches ?? 0), 0);
+  const totalWon = tickets.reduce((sum, tk) => sum + (tk.reward ?? 0), 0);
+  const bestMatch = tickets.reduce((m, tk) => Math.max(m, tk.matches ?? 0), 0);
 
   const stats = [
-    { icon: Coins, label: "余额", value: balance.toLocaleString(), accent: "gold" as const },
-    { icon: History, label: "已玩彩券", value: totalTickets.toString() },
-    { icon: Trophy, label: "总获奖", value: totalWon.toLocaleString(), accent: "gold" as const },
-    { icon: User2, label: "最佳命中", value: `${bestMatch}/7` },
+    { icon: Coins, label: t("dash.stat.balance"), value: balance.toLocaleString(), accent: "gold" as const },
+    { icon: History, label: t("dash.stat.played"), value: totalTickets.toString() },
+    { icon: Trophy, label: t("dash.stat.won"), value: totalWon.toLocaleString(), accent: "gold" as const },
+    { icon: User2, label: t("dash.stat.best"), value: `${bestMatch}/7` },
   ];
 
   return (
@@ -37,15 +39,15 @@ function DashboardPage() {
               {username.slice(0, 1).toUpperCase()}
             </div>
             <div>
-              <h1 className="font-display text-2xl sm:text-3xl font-bold">你好,{username}</h1>
-              <p className="text-sm text-muted-foreground">即时示范仪表板</p>
+              <h1 className="font-display text-2xl sm:text-3xl font-bold">{t("dash.hello", { name: username })}</h1>
+              <p className="text-sm text-muted-foreground">{t("dash.sub")}</p>
             </div>
           </div>
           <button
             onClick={reset}
             className="inline-flex h-9 items-center rounded-full glass px-4 text-sm hover:bg-white/5"
           >
-            重置示范
+            {t("dash.reset")}
           </button>
         </div>
 
@@ -65,39 +67,39 @@ function DashboardPage() {
 
         <div className="mt-10">
           <div className="flex items-center justify-between">
-            <h2 className="font-display text-xl font-semibold">彩券记录</h2>
-            <Link to="/play" className="text-sm text-muted-foreground hover:text-foreground">+ 新增彩券</Link>
+            <h2 className="font-display text-xl font-semibold">{t("dash.records")}</h2>
+            <Link to="/play" className="text-sm text-muted-foreground hover:text-foreground">{t("dash.add")}</Link>
           </div>
 
           <div className="mt-4 grid gap-3">
             {tickets.length === 0 && (
               <div className="glass rounded-2xl p-8 text-center text-muted-foreground">
-                还没有彩券。<Link to="/play" className="text-foreground underline underline-offset-4">前往玩第一场</Link>。
+                {t("dash.empty")}<Link to="/play" className="text-foreground underline underline-offset-4">{t("dash.empty.link")}</Link>。
               </div>
             )}
-            {tickets.map((t) => (
-              <div key={t.id} className="glass rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
+            {tickets.map((tk) => (
+              <div key={tk.id} className="glass rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
                 <div>
                   <div className="text-xs uppercase tracking-widest text-muted-foreground mb-2">
-                    {new Date(t.createdAt).toLocaleString()}
+                    {new Date(tk.createdAt).toLocaleString()}
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
-                    {t.numbers.map((n) => (
-                      <LotteryBall key={n} number={n} size="sm" selected={t.winning?.includes(n)} />
+                    {tk.numbers.map((n) => (
+                      <LotteryBall key={n} number={n} size="sm" selected={tk.winning?.includes(n)} />
                     ))}
                   </div>
                 </div>
                 <div className="flex items-center gap-6 shrink-0">
                   <div className="text-center">
-                    <div className="text-xs uppercase tracking-widest text-muted-foreground">命中</div>
+                    <div className="text-xs uppercase tracking-widest text-muted-foreground">{t("res.matches")}</div>
                     <div className="font-mono text-lg font-bold text-gradient-neon">
-                      {t.matches ?? "—"}
+                      {tk.matches ?? "—"}
                     </div>
                   </div>
                   <div className="text-center">
-                    <div className="text-xs uppercase tracking-widest text-muted-foreground">奖励</div>
+                    <div className="text-xs uppercase tracking-widest text-muted-foreground">{t("res.reward")}</div>
                     <div className="font-mono text-lg font-bold text-gradient-gold">
-                      {t.reward ? `+${t.reward.toLocaleString()}` : "—"}
+                      {tk.reward ? `+${tk.reward.toLocaleString()}` : "—"}
                     </div>
                   </div>
                 </div>
