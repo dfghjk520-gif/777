@@ -7,8 +7,8 @@ import { Coins, History, Trophy, User2 } from "lucide-react";
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
-      { title: "我的儀表板 · Seven77" },
-      { name: "description", content: "你的彩券、餘額和樂透統計。" },
+      { title: "我的仪表板 · Seven77" },
+      { name: "description", content: "你的彩券、余额和乐透统计。" },
     ],
   }),
   component: DashboardPage,
@@ -22,9 +22,9 @@ function DashboardPage() {
   const bestMatch = tickets.reduce((m, t) => Math.max(m, t.matches ?? 0), 0);
 
   const stats = [
-    { icon: Coins, label: "餘額", value: balance.toLocaleString(), accent: "gold" as const },
+    { icon: Coins, label: "余额", value: balance.toLocaleString(), accent: "gold" as const },
     { icon: History, label: "已玩彩券", value: totalTickets.toString() },
-    { icon: Trophy, label: "總獲獎", value: totalWon.toLocaleString(), accent: "gold" as const },
+    { icon: Trophy, label: "总获奖", value: totalWon.toLocaleString(), accent: "gold" as const },
     { icon: User2, label: "最佳命中", value: `${bestMatch}/7` },
   ];
 
@@ -38,14 +38,14 @@ function DashboardPage() {
             </div>
             <div>
               <h1 className="font-display text-2xl sm:text-3xl font-bold">你好,{username}</h1>
-              <p className="text-sm text-muted-foreground">即時示範儀表板</p>
+              <p className="text-sm text-muted-foreground">即时示范仪表板</p>
             </div>
           </div>
           <button
             onClick={reset}
             className="inline-flex h-9 items-center rounded-full glass px-4 text-sm hover:bg-white/5"
           >
-            重置示範
+            重置示范
           </button>
         </div>
 
@@ -65,14 +65,14 @@ function DashboardPage() {
 
         <div className="mt-10">
           <div className="flex items-center justify-between">
-            <h2 className="font-display text-xl font-semibold">彩券記錄</h2>
+            <h2 className="font-display text-xl font-semibold">彩券记录</h2>
             <Link to="/play" className="text-sm text-muted-foreground hover:text-foreground">+ 新增彩券</Link>
           </div>
 
           <div className="mt-4 grid gap-3">
             {tickets.length === 0 && (
               <div className="glass rounded-2xl p-8 text-center text-muted-foreground">
-                還沒有彩券。<Link to="/play" className="text-foreground underline underline-offset-4">前往玩第一場</Link>。
+                还没有彩券。<Link to="/play" className="text-foreground underline underline-offset-4">前往玩第一场</Link>。
               </div>
             )}
             {tickets.map((t) => (
@@ -95,7 +95,7 @@ function DashboardPage() {
                     </div>
                   </div>
                   <div className="text-center">
-                    <div className="text-xs uppercase tracking-widest text-muted-foreground">獎勵</div>
+                    <div className="text-xs uppercase tracking-widest text-muted-foreground">奖励</div>
                     <div className="font-mono text-lg font-bold text-gradient-gold">
                       {t.reward ? `+${t.reward.toLocaleString()}` : "—"}
                     </div>

@@ -4,9 +4,9 @@ import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
 
 const nav = [
-  { to: "/", label: "首頁" },
-  { to: "/play", label: "選號" },
-  { to: "/results", label: "開獎" },
+  { to: "/", label: "首页" },
+  { to: "/play", label: "选号" },
+  { to: "/results", label: "开奖" },
   { to: "/leaderboard", label: "排行榜" },
   { to: "/dashboard", label: "我的" },
 ] as const;
@@ -48,7 +48,7 @@ export function SiteHeader() {
                   to="/admin"
                   className="inline-flex h-9 items-center gap-1.5 rounded-full glass px-3 text-xs font-medium text-[oklch(0.85_0.15_240)] hover:bg-white/5 transition-colors"
                 >
-                  <ShieldCheck className="h-3.5 w-3.5" /> 後台
+                  <ShieldCheck className="h-3.5 w-3.5" /> 后台
                 </Link>
               )}
               <Link
@@ -82,7 +82,7 @@ export function SiteHeader() {
                 to="/login"
                 className="inline-flex h-9 items-center rounded-full bg-gradient-to-r from-[oklch(0.95_0.13_95)] to-[oklch(0.78_0.18_70)] px-4 text-sm font-semibold text-primary-foreground glow-gold hover:scale-105 transition-transform"
               >
-                立即開玩
+                立即开玩
               </Link>
             </>
           )}

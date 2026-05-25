@@ -34,7 +34,7 @@ export function Countdown() {
 
   return (
     <div className="flex items-end justify-center gap-2 sm:gap-4">
-      <Cell value={format(h)} label="時" />
+      <Cell value={format(h)} label="时" />
       <div className="pb-8 text-3xl sm:text-5xl font-bold text-muted-foreground/50">:</div>
       <Cell value={format(m)} label="分" />
       <div className="pb-8 text-3xl sm:text-5xl font-bold text-muted-foreground/50">:</div>
