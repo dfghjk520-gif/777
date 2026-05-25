@@ -6,7 +6,7 @@ export const Route = createFileRoute("/leaderboard")({
   head: () => ({
     meta: [
       { title: "排行榜 · Seven77" },
-      { name: "description", content: "頂尖贏家、最熱連勝與最準玩家。" },
+      { name: "description", content: "顶尖赢家、最热连胜与最准玩家。" },
     ],
   }),
   component: LeaderboardPage,
@@ -44,7 +44,7 @@ function LeaderboardPage() {
             名人堂
           </div>
           <h1 className="mt-4 font-display text-4xl sm:text-5xl font-bold tracking-tight">
-            <span className="text-gradient-gold">頂尖</span>玩家
+            <span className="text-gradient-gold">顶尖</span>玩家
           </h1>
         </div>
 
@@ -52,7 +52,7 @@ function LeaderboardPage() {
           <div className="lg:col-span-2 glass-strong rounded-3xl overflow-hidden">
             <div className="px-6 py-5 border-b border-white/5 flex items-center gap-2">
               <Crown className="h-4 w-4 text-[oklch(0.85_0.16_88)]" />
-              <h2 className="font-display font-semibold">最高獲獎</h2>
+              <h2 className="font-display font-semibold">最高获奖</h2>
             </div>
             <div className="divide-y divide-white/5">
               {winners.map((w) => (
@@ -81,7 +81,7 @@ function LeaderboardPage() {
             <div className="glass rounded-2xl p-5">
               <div className="flex items-center gap-2 mb-4">
                 <Flame className="h-4 w-4 text-[oklch(0.78_0.2_45)]" />
-                <h3 className="font-display font-semibold">最熱連勝</h3>
+                <h3 className="font-display font-semibold">最热连胜</h3>
               </div>
               <ul className="space-y-3">
                 {streaks.map((s) => (

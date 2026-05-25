@@ -10,7 +10,7 @@ export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
       { title: "登入 · Seven77" },
-      { name: "description", content: "登入或註冊以參加 Seven77 每日樂透。" },
+      { name: "description", content: "登入或注册以参加 Seven77 每日乐透。" },
     ],
   }),
   component: LoginPage,
@@ -38,7 +38,7 @@ function LoginPage() {
     try {
       if (mode === "signup") {
         if (username.trim().length < 2) {
-          toast.error("請輸入至少 2 個字元的暱稱");
+          toast.error("请输入至少 2 个字元的暱称");
           return;
         }
         const { error } = await supabase.auth.signUp({
@@ -50,19 +50,19 @@ function LoginPage() {
           },
         });
         if (error) {
-          if (error.message.includes("already")) toast.error("此電子郵件已註冊");
+          if (error.message.includes("already")) toast.error("此电子邮件已注册");
           else toast.error(error.message);
           return;
         }
-        toast.success("註冊成功!歡迎加入 Seven77");
+        toast.success("注册成功!欢迎加入 Seven77");
         navigate({ to: "/play" });
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) {
-          toast.error("帳號或密碼錯誤");
+          toast.error("帐号或密码错误");
           return;
         }
-        toast.success("歡迎回來!");
+        toast.success("欢迎回来!");
         navigate({ to: "/play" });
       }
     } finally {
@@ -78,10 +78,10 @@ function LoginPage() {
             <Sparkles className="h-5 w-5 text-background" />
           </div>
           <h1 className="mt-5 font-display text-3xl font-bold tracking-tight">
-            {mode === "signin" ? "歡迎回來" : "建立帳號"}
+            {mode === "signin" ? "欢迎回来" : "建立帐号"}
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            {mode === "signin" ? "登入以參加今日開獎。" : "註冊即可獲得 5,000 示範點數。"}
+            {mode === "signin" ? "登入以参加今日开奖。" : "注册即可获得 5,000 示范点数。"}
           </p>
         </div>
 
@@ -98,14 +98,14 @@ function LoginPage() {
             onClick={() => setMode("signup")}
             className={`h-9 rounded-full text-sm font-medium transition-colors ${mode === "signup" ? "bg-white/10 text-foreground" : "text-muted-foreground hover:text-foreground"}`}
           >
-            註冊
+            注册
           </button>
         </div>
 
         <form onSubmit={submit} className="mt-4 glass-strong rounded-3xl p-6 space-y-4">
           {mode === "signup" && (
             <label className="block">
-              <span className="text-xs uppercase tracking-widest text-muted-foreground">暱稱</span>
+              <span className="text-xs uppercase tracking-widest text-muted-foreground">暱称</span>
               <div className="mt-1.5 relative">
                 <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <input
@@ -113,7 +113,7 @@ function LoginPage() {
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="你的玩家名稱"
+                  placeholder="你的玩家名称"
                   maxLength={32}
                   className="w-full h-11 rounded-xl bg-white/5 border border-white/10 pl-10 pr-3 text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-[oklch(0.7_0.18_240)] focus:border-transparent transition"
                 />
@@ -122,7 +122,7 @@ function LoginPage() {
           )}
 
           <label className="block">
-            <span className="text-xs uppercase tracking-widest text-muted-foreground">電子郵件</span>
+            <span className="text-xs uppercase tracking-widest text-muted-foreground">电子邮件</span>
             <div className="mt-1.5 relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <input
@@ -137,7 +137,7 @@ function LoginPage() {
           </label>
 
           <label className="block">
-            <span className="text-xs uppercase tracking-widest text-muted-foreground">密碼</span>
+            <span className="text-xs uppercase tracking-widest text-muted-foreground">密码</span>
             <div className="mt-1.5 relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <input
@@ -146,7 +146,7 @@ function LoginPage() {
                 minLength={6}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="至少 6 個字元"
+                placeholder="至少 6 个字元"
                 className="w-full h-11 rounded-xl bg-white/5 border border-white/10 pl-10 pr-3 text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-[oklch(0.7_0.18_240)] focus:border-transparent transition"
               />
             </div>
@@ -158,20 +158,20 @@ function LoginPage() {
             className="w-full h-11 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[oklch(0.95_0.13_95)] to-[oklch(0.78_0.18_70)] font-semibold text-primary-foreground glow-gold hover:scale-[1.02] transition-transform disabled:opacity-60 disabled:hover:scale-100"
           >
             {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
-            {mode === "signin" ? "登入並開玩" : "建立帳號並開玩"}
+            {mode === "signin" ? "登入并开玩" : "建立帐号并开玩"}
           </button>
 
           <p className="text-center text-xs text-muted-foreground">
             {mode === "signin" ? (
-              <>還沒有帳號?<button type="button" onClick={() => setMode("signup")} className="text-foreground underline underline-offset-4">立即註冊</button></>
+              <>还没有帐号?<button type="button" onClick={() => setMode("signup")} className="text-foreground underline underline-offset-4">立即注册</button></>
             ) : (
-              <>已有帳號?<button type="button" onClick={() => setMode("signin")} className="text-foreground underline underline-offset-4">前往登入</button></>
+              <>已有帐号?<button type="button" onClick={() => setMode("signin")} className="text-foreground underline underline-offset-4">前往登入</button></>
             )}
           </p>
         </form>
 
         <p className="mt-6 text-center text-xs text-muted-foreground">
-          回到 <Link to="/" className="text-foreground underline underline-offset-4">首頁</Link>
+          回到 <Link to="/" className="text-foreground underline underline-offset-4">首页</Link>
         </p>
       </section>
     </PageShell>
